@@ -129,12 +129,74 @@
   }
 
   @media print {
+    /* Hide all non-print elements */
     .no-print {
-      display: none;
+      display: none !important;
+    }
+    
+    /* Hide browser chrome and Lovable elements */
+    body * {
+      visibility: hidden;
+    }
+    
+    .payslip-container, 
+    .payslip-container * {
+      visibility: visible;
     }
     
     .payslip-container {
-      @apply shadow-none border-0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 20px !important;
+      box-shadow: none !important;
+      border: none !important;
+      background: white !important;
+    }
+    
+    /* Preserve colors in print */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    
+    /* Ensure proper page setup */
+    @page {
+      margin: 0.5in;
+      size: A4;
+    }
+    
+    /* Force background colors to print */
+    .bg-orange-500 {
+      background-color: #f97316 !important;
+      color: white !important;
+    }
+    
+    .bg-slate-100 {
+      background-color: #f1f5f9 !important;
+    }
+    
+    .bg-blue-100 {
+      background-color: #dbeafe !important;
+    }
+    
+    .bg-gray-200 {
+      background-color: #e5e7eb !important;
+    }
+    
+    /* Table styling for print */
+    .payslip-table {
+      border-collapse: collapse !important;
+      border: 1px solid #000 !important;
+    }
+    
+    .payslip-table th,
+    .payslip-table td {
+      border: 1px solid #000 !important;
+      padding: 4px 8px !important;
     }
   }
 }

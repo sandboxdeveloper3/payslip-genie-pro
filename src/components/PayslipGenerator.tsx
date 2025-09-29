@@ -101,46 +101,48 @@ const PayslipGenerator = () => {
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-4xl mx-auto">
-        {/* Controls */}
-        <Card className="mb-6 no-print">
-          <CardHeader>
-            <CardTitle className="text-corporate-dark">Payslip Generator</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-4 items-end">
-              <div className="flex-1">
-                <label className="text-sm font-medium">Select Month & Year</label>
-                <Select
-                  value={`${selectedMonth}-${selectedYear}`}
-                  onValueChange={(value) => {
-                    const [month, year] = value.split('-');
-                    setSelectedMonth(month);
-                    setSelectedYear(parseInt(year));
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableOptions.map((option) => (
-                      <SelectItem key={`${option.month}-${option.year}`} value={`${option.month}-${option.year}`}>
-                        {option.month} {option.year}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+        {/* Controls - Hidden in print */}
+        <div className="mb-6 no-print">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-corporate-dark">Axact Payslip Generator</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-4 items-end">
+                <div className="flex-1">
+                  <label className="text-sm font-medium">Select Month & Year</label>
+                  <Select
+                    value={`${selectedMonth}-${selectedYear}`}
+                    onValueChange={(value) => {
+                      const [month, year] = value.split('-');
+                      setSelectedMonth(month);
+                      setSelectedYear(parseInt(year));
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableOptions.map((option) => (
+                        <SelectItem key={`${option.month}-${option.year}`} value={`${option.month}-${option.year}`}>
+                          {option.month} {option.year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button onClick={handlePrint} className="flex items-center gap-2">
+                  <Printer className="w-4 h-4" />
+                  Print Payslip
+                </Button>
               </div>
-              <Button onClick={handlePrint} className="flex items-center gap-2">
-                <Printer className="w-4 h-4" />
-                Print Payslip
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
-        {/* Payslip */}
-        <Card className="payslip-container bg-white shadow-lg">
-          <CardContent className="p-8">
+        {/* Payslip - Print optimized */}
+        <div className="payslip-container bg-white shadow-lg border border-gray-300">
+          <div className="p-8">
             {/* Header - Exact match to original */}
             <div className="border border-black">
               {/* PAYSLIP header bar at top */}
@@ -339,8 +341,8 @@ const PayslipGenerator = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
