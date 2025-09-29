@@ -168,7 +168,7 @@ const PayslipGenerator = () => {
                       </tr>
                       <tr>
                         <td className="text-left pr-4"><span className="font-medium">Designation :</span></td>
-                        <td className="text-left">Senior Software Architect</td>
+                        <td className="text-left">Software Eng</td>
                         <td className="text-left pl-8 pr-4"><span className="font-medium">Location :</span></td>
                         <td className="text-left">Karachi Pakistan</td>
                       </tr>
