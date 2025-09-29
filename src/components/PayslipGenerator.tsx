@@ -39,8 +39,13 @@ const PayslipGenerator = () => {
     const compensatoryLeave = generateRandomDeduction(13000, 14000);
     const bonus = generateRandomDeduction(6000, 7000);
 
-    // Fixed tax deductions
-    const incomeTax = 12605; // Fixed as per requirement
+    // Calculate income tax based on FBR 2013-14 rates
+    const annualSalary = basicSalary * 12; // 600,000 annually
+    // For 2013-14: Exemption was Rs 300,000, then 2% up to 400,000, then 5% up to 750,000
+    // Annual taxable income: 600,000 - 300,000 = 300,000
+    // Tax: First 100,000 @ 2% = 2,000, Next 200,000 @ 5% = 10,000
+    // Total annual tax = 12,000, Monthly = 1,000
+    const incomeTax = 1000; // Based on FBR 2013-14 rates for 50,000 monthly salary
     
     // Random other deductions
     const lunchBill = generateRandomDeduction(2200, 2800);
@@ -136,9 +141,14 @@ const PayslipGenerator = () => {
         {/* Payslip */}
         <Card className="payslip-container bg-white shadow-lg">
           <CardContent className="p-8">
-            {/* Header */}
-            <div className="border border-gray-400 mb-6">
-              {/* Top section with logo and employee info */}
+            {/* Header - Exact match to original */}
+            <div className="border border-black">
+              {/* PAYSLIP header bar at top */}
+              <div className="bg-orange-500 text-white p-3 text-right">
+                <h1 className="text-2xl font-bold tracking-wider">PAYSLIP</h1>
+              </div>
+              
+              {/* Main header content */}
               <div className="p-4 flex justify-between items-start">
                 <div>
                   <div className="text-4xl font-bold text-gray-600 mb-1">
@@ -148,36 +158,29 @@ const PayslipGenerator = () => {
                 </div>
                 
                 <div className="text-right">
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm">
-                    <div className="text-left">
-                      <div><span className="font-medium">Axactian Name :</span></div>
-                      <div><span className="font-medium">Designation :</span></div>
-                      <div><span className="font-medium">Department :</span></div>
-                    </div>
-                    <div className="text-left">
-                      <div>Noman Waheed</div>
-                      <div>Senior Software Architect</div>
-                      <div>Software</div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm mt-3">
-                    <div className="text-left">
-                      <div><span className="font-medium">Period :</span></div>
-                      <div><span className="font-medium">Location :</span></div>
-                      <div><span className="font-medium">Currency :</span></div>
-                    </div>
-                    <div className="text-left">
-                      <div>{selectedMonth} {selectedYear}</div>
-                      <div>Karachi Pakistan</div>
-                      <div>Pak-Rupees</div>
-                    </div>
-                  </div>
+                  <table className="text-sm">
+                    <tbody>
+                      <tr>
+                        <td className="text-left pr-4"><span className="font-medium">Axactian Name :</span></td>
+                        <td className="text-left">Noman Waheed</td>
+                        <td className="text-left pl-8 pr-4"><span className="font-medium">Period :</span></td>
+                        <td className="text-left">{selectedMonth} {selectedYear}</td>
+                      </tr>
+                      <tr>
+                        <td className="text-left pr-4"><span className="font-medium">Designation :</span></td>
+                        <td className="text-left">Senior Software Architect</td>
+                        <td className="text-left pl-8 pr-4"><span className="font-medium">Location :</span></td>
+                        <td className="text-left">Karachi Pakistan</td>
+                      </tr>
+                      <tr>
+                        <td className="text-left pr-4"><span className="font-medium">Department :</span></td>
+                        <td className="text-left">Software</td>
+                        <td className="text-left pl-8 pr-4"><span className="font-medium">Currency :</span></td>
+                        <td className="text-left">Pak-Rupees</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-              </div>
-              
-              {/* PAYSLIP header bar */}
-              <div className="bg-orange-500 text-white p-2 text-center border-t border-gray-400">
-                <h1 className="text-xl font-bold tracking-wider">PAYSLIP</h1>
               </div>
             </div>
 
