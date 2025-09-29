@@ -137,31 +137,47 @@ const PayslipGenerator = () => {
         <Card className="payslip-container bg-white shadow-lg">
           <CardContent className="p-8">
             {/* Header */}
-            <div className="border-2 border-black mb-6">
-              <div className="bg-orange-500 text-white p-2 text-center">
-                <h1 className="text-2xl font-bold">PAYSLIP</h1>
-              </div>
-              
-              <div className="p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="text-3xl font-bold text-gray-600 mb-2">
-                      a<span className="text-orange-500">x</span>act
-                    </div>
-                    <div className="text-sm text-gray-600">World's Leading IT Company</div>
+            <div className="border border-gray-400 mb-6">
+              {/* Top section with logo and employee info */}
+              <div className="p-4 flex justify-between items-start">
+                <div>
+                  <div className="text-4xl font-bold text-gray-600 mb-1">
+                    a<span className="text-orange-500">X</span>act
                   </div>
-                  
-                  <div className="text-right text-sm">
-                    <div><strong>Axactian Name:</strong> Noman Waheed</div>
-                    <div><strong>Designation:</strong> Senior Software Architect</div>
-                    <div><strong>Department:</strong> Software</div>
-                    <div className="mt-2">
-                      <div><strong>Period:</strong> {selectedMonth} {selectedYear}</div>
-                      <div><strong>Location:</strong> Karachi Pakistan</div>
-                      <div><strong>Currency:</strong> Pak-Rupees</div>
+                  <div className="text-sm text-gray-600 font-medium">World's Leading IT Company</div>
+                </div>
+                
+                <div className="text-right">
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm">
+                    <div className="text-left">
+                      <div><span className="font-medium">Axactian Name :</span></div>
+                      <div><span className="font-medium">Designation :</span></div>
+                      <div><span className="font-medium">Department :</span></div>
+                    </div>
+                    <div className="text-left">
+                      <div>Noman Waheed</div>
+                      <div>Senior Software Architect</div>
+                      <div>Software</div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-1 text-sm mt-3">
+                    <div className="text-left">
+                      <div><span className="font-medium">Period :</span></div>
+                      <div><span className="font-medium">Location :</span></div>
+                      <div><span className="font-medium">Currency :</span></div>
+                    </div>
+                    <div className="text-left">
+                      <div>{selectedMonth} {selectedYear}</div>
+                      <div>Karachi Pakistan</div>
+                      <div>Pak-Rupees</div>
                     </div>
                   </div>
                 </div>
+              </div>
+              
+              {/* PAYSLIP header bar */}
+              <div className="bg-orange-500 text-white p-2 text-center border-t border-gray-400">
+                <h1 className="text-xl font-bold tracking-wider">PAYSLIP</h1>
               </div>
             </div>
 
