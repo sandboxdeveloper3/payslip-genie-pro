@@ -9,9 +9,6 @@ interface PayslipData {
   year: number;
   basicSalary: number;
   otherAllowance: number;
-  fuelAllowance: number;
-  compensatoryLeave: number;
-  bonus: number;
   lunchBill: number;
   eobi: number;
   providentFund: number;
@@ -20,7 +17,7 @@ interface PayslipData {
 }
 
 const PayslipGenerator = () => {
-  const [selectedMonth, setSelectedMonth] = useState<string>('Jun');
+  const [selectedMonth, setSelectedMonth] = useState<string>('Jul');
   const [selectedYear, setSelectedYear] = useState<number>(2013);
 
   const months = [
@@ -33,34 +30,89 @@ const PayslipGenerator = () => {
   };
 
   const generatePayslipData = (month: string, year: number): PayslipData => {
-    const basicSalary = 50000;
-    const otherAllowance = Math.floor(basicSalary * 0.1); // 10% of basic
-    const fuelAllowance = generateRandomDeduction(12000, 15000);
-    const compensatoryLeave = generateRandomDeduction(13000, 14000);
-    const bonus = generateRandomDeduction(6000, 7000);
-
-    // Calculate income tax based on FBR 2013-14 rates
-    const annualSalary = basicSalary * 12; // 600,000 annually
-    // For 2013-14: Exemption was Rs 300,000, then 2% up to 400,000, then 5% up to 750,000
-    // Annual taxable income: 600,000 - 300,000 = 300,000
-    // Tax: First 100,000 @ 2% = 2,000, Next 200,000 @ 5% = 10,000
-    // Total annual tax = 12,000, Monthly = 1,000
-    const incomeTax = 1000; // Based on FBR 2013-14 rates for 50,000 monthly salary
+    // Determine salary and deductions based on year and month
+    let basicSalary: number;
+    let otherAllowance: number;
+    let incomeTax: number;
+    let providentFund: number;
+    const monthIndex = months.indexOf(month);
     
-    // Random other deductions
+    // Period 1: July 2013 to June 2014
+    if (year === 2013 || (year === 2014 && monthIndex < 6)) {
+      basicSalary = 30000;
+      otherAllowance = 20000;
+      incomeTax = 1083;
+      providentFund = 3000;
+    }
+    // Period 2: July 2014 to June 2015
+    else if ((year === 2014 && monthIndex >= 6) || (year === 2015 && monthIndex < 6)) {
+      basicSalary = 42000;
+      otherAllowance = 28000;
+      incomeTax = 2208;
+      providentFund = 4200;
+    }
+    // Period 3: July 2016 to June 2017
+    else if ((year === 2016 && monthIndex >= 6) || (year === 2017 && monthIndex < 6)) {
+      basicSalary = 57000;
+      otherAllowance = 38000;
+      incomeTax = 4458;
+      providentFund = 5700;
+    }
+    // Period 4: July 2018 to June 2019
+    else if ((year === 2018 && monthIndex >= 6) || (year === 2019 && monthIndex < 6)) {
+      basicSalary = 57000;
+      otherAllowance = 38000;
+      incomeTax = 4458;
+      providentFund = 5700;
+    }
+    // Period 5: July 2019 to June 2020
+    else if ((year === 2019 && monthIndex >= 6) || (year === 2020 && monthIndex < 6)) {
+      basicSalary = 57000;
+      otherAllowance = 38000;
+      incomeTax = 4458;
+      providentFund = 5700;
+    }
+    // Period 6: July 2020 to June 2021
+    else if ((year === 2020 && monthIndex >= 6) || (year === 2021 && monthIndex < 6)) {
+      basicSalary = 66000;
+      otherAllowance = 44000;
+      incomeTax = 3500;
+      providentFund = 6600;
+    }
+    // Period 7: July 2021 to June 2022
+    else if ((year === 2021 && monthIndex >= 6) || (year === 2022 && monthIndex < 6)) {
+      basicSalary = 90000;
+      otherAllowance = 60000;
+      incomeTax = 7500;
+      providentFund = 9000;
+    }
+    // Period 8: July 2022 to June 2023
+    else if ((year === 2022 && monthIndex >= 6) || (year === 2023 && monthIndex < 6)) {
+      basicSalary = 99000;
+      otherAllowance = 66000;
+      incomeTax = 9375;
+      providentFund = 9900;
+    }
+    // Default fallback
+    else {
+      basicSalary = 30000;
+      otherAllowance = 20000;
+      incomeTax = 1083;
+      providentFund = 3000;
+    }
+
+    // Fixed deductions (same for all months)
+    const eobi = 130;
+    const mobilDeduction = 1600; // Fixed mobile deduction
+    
+    // Random deductions
     const lunchBill = generateRandomDeduction(2200, 2800);
-    const eobi = generateRandomDeduction(120, 140);
-    const providentFund = generateRandomDeduction(7000, 7500);
-    const mobilDeduction = generateRandomDeduction(1500, 1700);
 
     return {
       month,
       year,
       basicSalary,
       otherAllowance,
-      fuelAllowance,
-      compensatoryLeave,
-      bonus,
       lunchBill,
       eobi,
       providentFund,
@@ -72,9 +124,77 @@ const PayslipGenerator = () => {
   const payslipData = generatePayslipData(selectedMonth, selectedYear);
 
   const grossSalary = payslipData.basicSalary + payslipData.otherAllowance;
-  const totalAdditions = payslipData.fuelAllowance + payslipData.compensatoryLeave + payslipData.bonus;
   const totalDeductions = payslipData.lunchBill + payslipData.eobi + payslipData.providentFund + payslipData.mobilDeduction + payslipData.incomeTax;
-  const netPayable = grossSalary + totalAdditions - totalDeductions;
+  const netPayable = grossSalary - totalDeductions;
+
+  // Calculate cumulative PF based on the current period
+  const calculateCumulativePF = (month: string, year: number): number => {
+    const monthIndex = months.indexOf(month);
+    let monthsInCurrentPeriod = 0;
+    
+    // Determine which period and calculate months elapsed in that period
+    if (year === 2013 || (year === 2014 && monthIndex < 6)) {
+      // Period 1: July 2013 to June 2014
+      if (year === 2013) {
+        monthsInCurrentPeriod = monthIndex - 6 + 1; // July=1, Aug=2, etc.
+      } else {
+        monthsInCurrentPeriod = 6 + monthIndex + 1; // Jan=7, Feb=8, etc.
+      }
+    } else if ((year === 2014 && monthIndex >= 6) || (year === 2015 && monthIndex < 6)) {
+      // Period 2: July 2014 to June 2015
+      if (year === 2014) {
+        monthsInCurrentPeriod = monthIndex - 6 + 1;
+      } else {
+        monthsInCurrentPeriod = 6 + monthIndex + 1;
+      }
+    } else if ((year === 2016 && monthIndex >= 6) || (year === 2017 && monthIndex < 6)) {
+      // Period 3: July 2016 to June 2017
+      if (year === 2016) {
+        monthsInCurrentPeriod = monthIndex - 6 + 1;
+      } else {
+        monthsInCurrentPeriod = 6 + monthIndex + 1;
+      }
+    } else if ((year === 2018 && monthIndex >= 6) || (year === 2019 && monthIndex < 6)) {
+      // Period 4: July 2018 to June 2019
+      if (year === 2018) {
+        monthsInCurrentPeriod = monthIndex - 6 + 1;
+      } else {
+        monthsInCurrentPeriod = 6 + monthIndex + 1;
+      }
+    } else if ((year === 2019 && monthIndex >= 6) || (year === 2020 && monthIndex < 6)) {
+      // Period 5: July 2019 to June 2020
+      if (year === 2019) {
+        monthsInCurrentPeriod = monthIndex - 6 + 1;
+      } else {
+        monthsInCurrentPeriod = 6 + monthIndex + 1;
+      }
+    } else if ((year === 2020 && monthIndex >= 6) || (year === 2021 && monthIndex < 6)) {
+      // Period 6: July 2020 to June 2021
+      if (year === 2020) {
+        monthsInCurrentPeriod = monthIndex - 6 + 1;
+      } else {
+        monthsInCurrentPeriod = 6 + monthIndex + 1;
+      }
+    } else if ((year === 2021 && monthIndex >= 6) || (year === 2022 && monthIndex < 6)) {
+      // Period 7: July 2021 to June 2022
+      if (year === 2021) {
+        monthsInCurrentPeriod = monthIndex - 6 + 1;
+      } else {
+        monthsInCurrentPeriod = 6 + monthIndex + 1;
+      }
+    } else if ((year === 2022 && monthIndex >= 6) || (year === 2023 && monthIndex < 6)) {
+      // Period 8: July 2022 to June 2023
+      if (year === 2022) {
+        monthsInCurrentPeriod = monthIndex - 6 + 1;
+      } else {
+        monthsInCurrentPeriod = 6 + monthIndex + 1;
+      }
+    }
+    
+    return payslipData.providentFund * monthsInCurrentPeriod;
+  };
+
+  const cumulativePF = calculateCumulativePF(selectedMonth, selectedYear);
 
   const handlePrint = () => {
     window.print();
@@ -83,15 +203,37 @@ const PayslipGenerator = () => {
   const getAvailableMonthsYears = () => {
     const result = [];
     
-    // June 2013 to December 2013
-    for (let i = 5; i < 12; i++) { // June is index 5
-      result.push({ month: months[i], year: 2013 });
-    }
+    // Period 1: July 2013 to June 2014
+    for (let i = 6; i < 12; i++) result.push({ month: months[i], year: 2013 });
+    for (let i = 0; i < 6; i++) result.push({ month: months[i], year: 2014 });
     
-    // January 2014 to July 2014
-    for (let i = 0; i < 7; i++) { // July is index 6
-      result.push({ month: months[i], year: 2014 });
-    }
+    // Period 2: July 2014 to June 2015
+    for (let i = 6; i < 12; i++) result.push({ month: months[i], year: 2014 });
+    for (let i = 0; i < 6; i++) result.push({ month: months[i], year: 2015 });
+    
+    // Period 3: July 2016 to June 2017
+    for (let i = 6; i < 12; i++) result.push({ month: months[i], year: 2016 });
+    for (let i = 0; i < 6; i++) result.push({ month: months[i], year: 2017 });
+    
+    // Period 4: July 2018 to June 2019
+    for (let i = 6; i < 12; i++) result.push({ month: months[i], year: 2018 });
+    for (let i = 0; i < 6; i++) result.push({ month: months[i], year: 2019 });
+    
+    // Period 5: July 2019 to June 2020
+    for (let i = 6; i < 12; i++) result.push({ month: months[i], year: 2019 });
+    for (let i = 0; i < 6; i++) result.push({ month: months[i], year: 2020 });
+    
+    // Period 6: July 2020 to June 2021
+    for (let i = 6; i < 12; i++) result.push({ month: months[i], year: 2020 });
+    for (let i = 0; i < 6; i++) result.push({ month: months[i], year: 2021 });
+    
+    // Period 7: July 2021 to June 2022
+    for (let i = 6; i < 12; i++) result.push({ month: months[i], year: 2021 });
+    for (let i = 0; i < 6; i++) result.push({ month: months[i], year: 2022 });
+    
+    // Period 8: July 2022 to June 2023
+    for (let i = 6; i < 12; i++) result.push({ month: months[i], year: 2022 });
+    for (let i = 0; i < 6; i++) result.push({ month: months[i], year: 2023 });
     
     return result;
   };
@@ -105,7 +247,7 @@ const PayslipGenerator = () => {
         <div className="mb-6 no-print">
           <Card>
             <CardHeader>
-              <CardTitle className="text-corporate-dark">Axact Payslip Generator</CardTitle>
+              <CardTitle className="text-corporate-dark">PaySlip</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex gap-4 items-end">
@@ -141,22 +283,27 @@ const PayslipGenerator = () => {
         </div>
 
         {/* Payslip - Print optimized */}
-        <div className="payslip-container bg-white shadow-lg border border-gray-300">
-          <div className="p-8">
+        <div className="payslip-container bg-white shadow-lg border border-gray-300 relative overflow-hidden">
+          {/* Watermark */}
+          <div className="watermark" style={{ color: 'rgba(255, 184, 0, 0.15)', fontStyle: 'italic' }}>X</div>
+          
+          <div className="p-8 relative z-10">
             {/* Header - Exact match to original */}
             <div className="border border-black">
               {/* PAYSLIP header bar at top */}
-              <div className="bg-orange-500 text-white p-3 text-right">
+              <div className="text-white p-3 text-right" style={{ backgroundColor: '#FFB800' }}>
                 <h1 className="text-2xl font-bold tracking-wider">PAYSLIP</h1>
               </div>
               
               {/* Main header content */}
               <div className="p-4 flex justify-between items-start">
                 <div>
-                  <div className="text-4xl font-bold text-gray-600 mb-1">
-                    a<span className="text-orange-500">X</span>act
+                  <div className="text-5xl font-bold mb-1" style={{ letterSpacing: '-2px' }}>
+                    <span className="text-gray-600">a</span>
+                    <span className="text-yellow-500 italic" style={{ color: '#FFB800' }}>X</span>
+                    <span className="text-gray-600">act</span>
                   </div>
-                  <div className="text-sm text-gray-600 font-medium">World's Leading IT Company</div>
+                  <div className="text-xs text-gray-700 font-medium">World's Leading IT Company</div>
                 </div>
                 
                 <div className="text-right">
@@ -207,35 +354,8 @@ const PayslipGenerator = () => {
                       <td className="text-right">{payslipData.otherAllowance.toFixed(2)}</td>
                     </tr>
                     <tr className="font-semibold">
-                      <td>Gross Salary : {grossSalary.toFixed(2)}</td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <table className="w-full payslip-table mt-4">
-                  <thead>
-                    <tr>
-                      <th className="payslip-section text-left">Addition</th>
-                      <th className="payslip-section text-right"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Fuel Allowance</td>
-                      <td className="text-right">{payslipData.fuelAllowance.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                      <td>Compensatory Leave Allowance 1 Day(s)</td>
-                      <td className="text-right">{payslipData.compensatoryLeave.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                      <td>Bonus</td>
-                      <td className="text-right">{payslipData.bonus.toFixed(2)}</td>
-                    </tr>
-                    <tr className="font-semibold">
-                      <td>Total Additions: {totalAdditions.toFixed(2)}</td>
-                      <td></td>
+                      <td>Gross Salary : </td>
+                      <td className="text-right">{grossSalary.toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -272,8 +392,8 @@ const PayslipGenerator = () => {
                       <td className="text-right">{payslipData.incomeTax.toFixed(2)}</td>
                     </tr>
                     <tr className="font-semibold">
-                      <td>Total Deduction : {totalDeductions.toFixed(2)}</td>
-                      <td></td>
+                      <td>Total Deduction : </td>
+                      <td className="text-right">{totalDeductions.toFixed(2)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -296,31 +416,23 @@ const PayslipGenerator = () => {
                 DETAILS
               </div>
               
-              <div className="grid grid-cols-4 gap-4 mt-4 text-xs">
+              <div className="grid grid-cols-3 gap-3 mt-3 text-xs">
                 {/* Mobile Details */}
                 <div>
                   <div className="bg-blue-100 p-1 text-center font-semibold">Mobile Details</div>
                   <table className="w-full payslip-table">
                     <tr><td>Balance Allocated</td><td className="text-right">2500.00</td></tr>
-                    <tr><td>Balance Used</td><td className="text-right">{(2500 - payslipData.mobilDeduction).toFixed(2)}</td></tr>
+                    <tr><td>Balance Used</td><td className="text-right">{(2500 + payslipData.mobilDeduction).toFixed(2)}</td></tr>
                   </table>
                 </div>
 
-                {/* Leave Details */}
-                <div>
-                  <div className="bg-blue-100 p-1 text-center font-semibold">Annual Leave Details</div>
-                  <table className="w-full payslip-table">
-                    <tr><td>Allocated Leaves</td><td className="text-right">34.00</td></tr>
-                    <tr><td>Leaves Allocated</td><td className="text-right">2.50</td></tr>
-                    <tr><td>Total</td><td className="text-right">31.5</td></tr>
-                  </table>
-                </div>
+               
 
                 {/* Provident Fund */}
                 <div>
                   <div className="bg-blue-100 p-1 text-center font-semibold">Provident Fund Details</div>
                   <table className="w-full payslip-table">
-                    <tr><td>This Month (Year 2018)</td><td className="text-right">{payslipData.providentFund.toFixed(2)}</td></tr>
+                    <tr><td>This Month (Year {selectedYear})</td><td className="text-right">{(payslipData.providentFund + payslipData.providentFund).toFixed(2)}</td></tr>
                     <tr><td>Your Contribution</td><td className="text-right">{payslipData.providentFund.toFixed(2)}</td></tr>
                     <tr><td>Axact's Contribution</td><td className="text-right">{payslipData.providentFund.toFixed(2)}</td></tr>
                   </table>
@@ -330,13 +442,9 @@ const PayslipGenerator = () => {
                 <div>
                   <div className="bg-blue-100 p-1 text-center font-semibold">Monthly Facilities Details</div>
                   <table className="w-full payslip-table">
-                    <tr><td>Facility</td><td className="text-right">Availed (# of Times)</td></tr>
-                    <tr><td>Gym</td><td className="text-right">00.00</td></tr>
-                    <tr><td>Library</td><td className="text-right">00.00</td></tr>
+                    <tr><td>Facility</td><td className="text-right">Availed</td></tr>                    
                     <tr><td>Salon</td><td className="text-right">5</td></tr>
-                    <tr><td>Indoor Games</td><td className="text-right">0</td></tr>
-                    <tr><td>Movie Theater</td><td className="text-right">00.00</td></tr>
-                    <tr><td>Hut</td><td className="text-right">00.00</td></tr>
+                    
                   </table>
                 </div>
               </div>

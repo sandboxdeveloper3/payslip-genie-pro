@@ -128,6 +128,33 @@
     @apply bg-slate-100 font-semibold;
   }
 
+  /* Watermark styling */
+  .watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 280px;
+    font-weight: 900;
+    color: rgba(255, 184, 0, 0.15);
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    font-family: Arial, sans-serif;
+    font-style: italic;
+    letter-spacing: -10px;
+  }
+
+  @media print {
+    /* Watermark for print */
+    .watermark {
+      -webkit-print-color-adjust: exact !important;
+      color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color: rgba(255, 184, 0, 0.15) !important;
+    }
+  }
+
   @media print {
     /* Hide all non-print elements */
     .no-print {
@@ -171,7 +198,7 @@
     
     /* Force background colors to print */
     .bg-orange-500 {
-      background-color: #f97316 !important;
+      background-color: #FFB800 !important;
       color: white !important;
     }
     
